@@ -4,41 +4,50 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"os/exec"
-	"runtime"
 )
 
-func ClearCmdLine() {
-	clearCommand := ""
-	if runtime.GOOS == "windows" {
-		clearCommand = "cls"
-	} else {
-		clearCommand = "clear"
-	}
-
-	cmd := exec.Command(clearCommand)
-	cmd.Stdout = os.Stdout
-	cmd.Run()
-}
-
 func StartRepl() {
+	commandClear()
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
 		fmt.Print("pokedex > ")
 		scanner.Scan()
-		switch scanner.Text() {
-		case "help":
-			commandHelp()
-		case "exit":
-			return
-		default:
-			fmt.Println("Unknown command, please use a valid prompt")
+		commandName := scanner.Text()
+		command, exists := getCommands()[commandName]
+		if exists {
+			command.callback()
+			continue
+		} else {
+			fmt.Println("Command not found")
+			continue
 		}
+
 	}
 }
 
-func commandHelp() {
-	fmt.Println("Welcome to the Pokedex!")
-	fmt.Println("Usage:")
+type cliCommand struct {
+	name        string
+	description string
+	callback    func()
+}
+
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
+		"help": {
+			name:        "help",
+			description: "Displays a help message",
+			callback:    commandHelp,
+		},
+		"exit": {
+			name:        "exit",
+			description: "Exit the Pokedex",
+			callback:    commandExit,
+		},
+		"clear": {
+			name:        "clear",
+			description: "Clear the terminal",
+			callback:    commandClear,
+		},
+	}
 }
