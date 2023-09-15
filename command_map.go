@@ -1,31 +1,46 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"log"
 
 	"github.com/brenombrezende/pokecli/internal/apihandler"
 )
 
-type PokeLocation struct {
-	Count    int    `json:"count"`
-	Next     string `json:"next"`
-	Previous string `json:"previous"`
-	Results  []struct {
-		Name string `json:"name"`
-		URL  string `json:"url"`
-	} `json:"results"`
-}
+func commandMap(cfg *config) error {
 
-const path = "location/"
+	resp, err := apihandler.RequestLocationAreas(cfg.nextLocationsURL)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-func commandMap() error {
+	for _, value := range resp.Results {
+		fmt.Printf("- %s\n", string(value.Name))
+	}
 
-	locations := apihandler.Request(path)
-	fmt.Println(string(locations))
+	cfg.nextLocationsURL = resp.Next
+	cfg.prevLocationsURL = resp.Previous
+
 	return nil
 }
 
-func commandMapb() error {
-	fmt.Println("To be implemented!")
+func commandMapb(cfg *config) error {
+
+	if cfg.prevLocationsURL == nil {
+		return errors.New("you are on the first page")
+	}
+
+	resp, err := apihandler.RequestLocationAreas(cfg.prevLocationsURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, value := range resp.Results {
+		fmt.Printf("- %s\n", string(value.Name))
+	}
+
+	cfg.nextLocationsURL = resp.Next
+	cfg.prevLocationsURL = resp.Previous
+
 	return nil
 }

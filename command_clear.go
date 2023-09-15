@@ -6,7 +6,7 @@ import (
 	"runtime"
 )
 
-func commandClear() error {
+func commandClear(cfg *config) error {
 	clearCommand := ""
 	if runtime.GOOS == "windows" {
 		clearCommand = "cls"

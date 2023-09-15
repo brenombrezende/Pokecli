@@ -7,8 +7,13 @@ import (
 	"strings"
 )
 
-func StartRepl() {
-	commandClear()
+type config struct {
+	nextLocationsURL *string
+	prevLocationsURL *string
+}
+
+func StartRepl(cfg *config) {
+	commandClear(cfg)
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -20,7 +25,7 @@ func StartRepl() {
 		}
 		command, exists := getCommands()[commandName[0]]
 		if exists {
-			err := command.callback()
+			err := command.callback(cfg)
 			if err != nil {
 				fmt.Print("ERROR - ")
 				fmt.Println(err)
@@ -43,7 +48,7 @@ func cleanInput(str string) []string {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(cfg *config) error
 }
 
 func getCommands() map[string]cliCommand {
