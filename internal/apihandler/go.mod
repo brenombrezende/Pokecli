@@ -1,3 +1,3 @@
-module github.com/brenombrezende/pokecli/internal/apihandler v1.0.0
+module github.com/brenombrezende/pokecli/internal/apihandler
 
 go 1.21.0
