@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func commandHelp() {
+func commandHelp() error {
 	allCommands := getCommands()
 	fmt.Println("----------")
 	fmt.Println("List of all available commands:")
@@ -10,4 +10,5 @@ func commandHelp() {
 		fmt.Println(c.name, " - ", c.description)
 	}
 	fmt.Println("----------")
+	return nil
 }

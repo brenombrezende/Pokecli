@@ -6,7 +6,7 @@ import (
 	"runtime"
 )
 
-func commandClear() {
+func commandClear() error {
 	clearCommand := ""
 	if runtime.GOOS == "windows" {
 		clearCommand = "cls"
@@ -17,4 +17,5 @@ func commandClear() {
 	cmd := exec.Command(clearCommand)
 	cmd.Stdout = os.Stdout
 	cmd.Run()
+	return nil
 }
