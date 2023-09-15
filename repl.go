@@ -14,6 +14,11 @@ type config struct {
 
 func StartRepl(cfg *config) {
 	commandClear(cfg)
+	fmt.Println("----------")
+	fmt.Println("Welcome to the CLI Pokedex!")
+	fmt.Println("To get started, try the 'help' command")
+	fmt.Println("----------")
+	fmt.Println()
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
